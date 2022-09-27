@@ -113,3 +113,186 @@ $('.select-dropdown__list-item').on('click', function(){
 	$('.select-dropdown__button span').text($(this).text()).parent().attr('data-value', itemValue);
 	$('.select-dropdown__list').toggleClass('active');
 });
+********************************************************************
+
+
+******************************************
+<div class="wrap">
+	<h1>Custom Select</h1>
+<select>
+  <option>HTML</option>
+  <option>HTML CSS3</option>
+  <option active>HTML CSS3 SASS</option>
+  <option>HTML CSS3 SASS LESS </option>
+  <option>HTML CSS3 SASS LESS  STYLUS</option>
+  <option>JQUERY</option>
+  <option>BOOTSTRAP</option>
+  <option>MATERIAL</option>
+  <option>REACT</option>
+  <option>ANGULAR</option>
+</select>
+</div>
+***************************************
+body{
+     background: #232323;
+}
+ .wrap{
+     max-width: 400px;
+     position: absolute;
+     left: 50%;
+     top: 30%;
+     transform: translate(-50%,-30%);
+}
+ .select {
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     font-size: 16px;
+     color: #fff;
+     width: 100%;
+     height: 40px;
+}
+ select {
+     display: none;
+}
+ .wrap h1{
+     text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18, -40px -40px 0px rgba(28,110,164,0);
+     color: #181B33;
+     background: #232323;
+     font-size: 47px;
+     text-align: center;
+     font-family: monospace;
+}
+ .custom-select {
+     position: absolute;
+     top: 0;
+     right: 0;
+     bottom: 0;
+     left: 0;
+     background-color: #fff;
+     color: #9E9E9E;
+     padding: 8px 15px;
+     -moz-transition: all 0.2s ease-in;
+     -o-transition: all 0.2s ease-in;
+     -webkit-transition: all 0.2s ease-in;
+     transition: all 0.2s ease-in;
+}
+ .custom-select:after {
+     content: "";
+     width: 0;
+     height: 0;
+     border: 7px solid transparent;
+     border-color:#9E9E9E transparent transparent transparent;
+     position: absolute;
+     top: 16px;
+     right: 10px;
+     transform: rotateZ(0deg);
+     transition: all 0.5s;
+     transform-origin: 50% 25%;
+}
+/*.custom-select:hover {
+     background-color: #b83729;
+}
+*/
+ .custom-select:active, .custom-select.active {
+     background-color: #fff;
+     color: #9E9E9E;
+}
+ .custom-select:active:after, .custom-select.active:after {
+     transform: rotateZ(180deg);
+     transition: all 0.5s;
+     transform-origin: 50% 25%;
+}
+ .custom-select:focus{
+    outline: 2px;
+}
+ .select-options {
+     max-height: 200px;
+     overflow-y: auto;
+     display: block;
+     position: absolute;
+     top: 100%;
+     right: 0;
+     left: 0;
+     z-index: 999;
+     margin: 0;
+     padding: 0;
+     list-style: none;
+     background-color: #AED581;
+     border-radius: 0px 0px 5px 5px;
+}
+ .select-options li {
+     color: #424242;
+     margin: 0;
+     padding: 12px 0;
+    /* text-indent: 15px;
+    */
+    /* border-top: 1px solid #AED581;
+    */
+     -moz-transition: all 0.15s ease-in;
+     -o-transition: all 0.15s ease-in;
+     -webkit-transition: all 0.15s ease-in;
+     transition: all 0.15s ease-in;
+     padding-left: 15px;
+}
+ .select-options li:hover {
+     color: #424242;
+     background: #fff;
+}
+ .select-options li[rel="hide"] {
+     display: none;
+}
+ ::-webkit-scrollbar {
+     width: 10px;
+     background-color: #F5F5F5;
+     border-radius: 0 0 5px 0;
+}
+ ::-webkit-scrollbar-thumb {
+     border-radius: 10px;
+     background-color:#9E9E9E;
+}
+**********************************
+	$('select').each(function(){
+    var $this = $(this), selectOptions = $(this).children('option').length;
+  
+    $this.addClass('hide-select'); 
+    $this.wrap('<div class="select"></div>');
+    $this.after('<div class="custom-select"></div>');
+
+    var $customSelect = $this.next('div.custom-select');
+    $customSelect.text($this.children('option').eq(0).text());
+  
+    var $optionlist = $('<ul />', {
+        'class': 'select-options'
+    }).insertAfter($customSelect);
+  
+    for (var i = 0; i < selectOptions; i++) {
+        $('<li />', {
+            text: $this.children('option').eq(i).text(),
+            rel: $this.children('option').eq(i).val()
+        }).appendTo($optionlist);
+    }
+  
+    var $optionlistItems = $optionlist.children('li');
+  
+    $customSelect.click(function(e) {
+        e.stopPropagation();
+        $('div.custom-select.active').not(this).each(function(){
+            $(this).removeClass('active').next('ul.select-options').hide();
+        });
+        $(this).toggleClass('active').next('ul.select-options').slideToggle();
+    });
+  
+    $optionlistItems.click(function(e) {
+        e.stopPropagation();
+        $customSelect.text($(this).text()).removeClass('active');
+        $this.val($(this).attr('rel'));
+        $optionlist.hide();
+    });
+  
+    $(document).click(function() {
+        $customSelect.removeClass('active');
+        $optionlist.hide();
+    });
+
+});
